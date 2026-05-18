@@ -1,0 +1,38 @@
+INCIDENT RESPONSE SOP
+Version: 3.2
+Department: Security Operations
+Classification: Internal
+
+Purpose:
+This SOP defines the process for responding to cybersecurity incidents.
+
+Severity Levels:
+- Critical
+- High
+- Medium
+- Low
+
+Initial Triage Steps:
+1. Validate alert authenticity.
+2. Determine affected assets.
+3. Identify indicators of compromise.
+4. Escalate high-severity incidents to IR leadership.
+
+Containment:
+- Isolate compromised hosts.
+- Disable affected accounts.
+- Block malicious IP addresses.
+- Preserve forensic evidence.
+
+Eradication:
+- Remove malware.
+- Patch exploited vulnerabilities.
+- Rotate credentials.
+
+Recovery:
+- Restore systems from backups.
+- Validate system integrity.
+- Monitor for reinfection.
+
+Lessons Learned:
+A post-incident review must occur within 72 hours.

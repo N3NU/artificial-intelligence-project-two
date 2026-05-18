@@ -1,0 +1,29 @@
+RANSOMWARE RESPONSE PLAYBOOK
+Version: 2.4
+Department: Incident Response
+Classification: Confidential
+
+Purpose:
+This playbook defines ransomware containment procedures.
+
+Indicators:
+- Mass file encryption
+- Ransom notes
+- Suspicious PowerShell execution
+- Backup deletion attempts
+
+Immediate Actions:
+1. Disconnect infected hosts.
+2. Disable lateral movement paths.
+3. Preserve volatile memory if possible.
+4. Notify executive leadership.
+
+Communication:
+- Notify legal counsel.
+- Notify cyber insurance provider.
+- Prepare public relations guidance.
+
+Recovery:
+- Restore offline backups.
+- Rebuild compromised systems.
+- Conduct root cause analysis.

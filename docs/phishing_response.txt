@@ -1,0 +1,28 @@
+PHISHING RESPONSE PROCEDURE
+Version: 1.8
+Department: Security Awareness
+Classification: Internal
+
+Purpose:
+This procedure defines how phishing reports are investigated.
+
+Analysis Steps:
+1. Review sender address.
+2. Inspect embedded URLs.
+3. Analyze email headers.
+4. Determine whether payloads were executed.
+
+Response Actions:
+- Quarantine malicious emails.
+- Block malicious domains.
+- Reset affected user passwords.
+- Review MFA logs.
+
+Indicators of Phishing:
+- Urgent language
+- Credential requests
+- Suspicious attachments
+- Fake login pages
+
+User Guidance:
+Employees must report suspicious emails within 15 minutes.
