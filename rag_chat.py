@@ -69,7 +69,23 @@ while True:
     # RETRIEVAL
     # -------------------------
 
-    results = db.similarity_search(query, k=4)
+    results = db.similarity_search(
+        query,
+        k=4,
+        filter={"trusted": True}
+    )
+
+    print("\n--- Retrieved Documents ---")
+
+    for r in results:
+
+        print(
+            f"""
+    Source: {r.metadata.get('source')}
+    Category: {r.metadata.get('category')}
+    Trusted: {r.metadata.get('trusted')}
+    """
+        )
 
     # -------------------------
     # FILTER MALICIOUS CHUNKS
@@ -90,16 +106,19 @@ while True:
     # BUILD CONTEXT
     # -------------------------
 
-    context = "\n\n".join([
-        f"""
-SOURCE: {r.metadata.get('source')}
+    context = "-\n-\n".join([
+        f"""SOURCE: {r.metadata.get('source')}
+
+CATEGORY: {r.metadata.get('category')}
+
+DEPARTMENT: {r.metadata.get('department')}
 
 CONTENT:
 {r.page_content}
 """
         for r in safe_results
     ])
-
+#    print(f"context:\n\n{context}\n\n")
     # -------------------------
     # PROMPT
     # -------------------------
