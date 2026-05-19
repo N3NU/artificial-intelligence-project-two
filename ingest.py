@@ -22,14 +22,56 @@ all_docs = []
 for file_path in Path(DOCS_PATH).glob("*.txt"):
 
     print(f"Loading: {file_path.name}")
-
     loader = TextLoader(str(file_path))
     docs = loader.load()
+#    if "phishing" in str(file_path):
+#        print(f"docs: {docs}")
+    filename = file_path.name
 
-    # Add metadata
+    # -------------------------
+    # DEFAULT METADATA
+    # -------------------------
+
+    metadata = {
+        "source": filename,
+        "trusted": True,
+        "department": "general",
+        "classification": "internal",
+        "category": "general"
+    }
+
+    # -------------------------
+    # DOCUMENT-SPECIFIC METADATA
+    # -------------------------
+
+    if "ransomware" in filename:
+        metadata["category"] = "ransomware"
+        metadata["department"] = "incident_response"
+
+    elif "phishing" in filename:
+        metadata["category"] = "phishing"
+        metadata["department"] = "security_awareness"
+    elif "password" in filename:
+        metadata["category"] = "identity"
+        metadata["department"] = "it_security"
+
+    elif "ir_sop" in filename:
+        metadata["category"] = "incident_response"
+        metadata["department"] = "soc"
+
+    elif "malicious" in filename:
+        metadata["trusted"] = False
+        metadata["classification"] = "untrusted"
+        metadata["category"] = "prompt_injection"
+
+    # -------------------------
+    # APPLY METADATA
+    # -------------------------
+
     for doc in docs:
-        doc.metadata["source"] = file_path.name
-
+        doc.metadata.update(metadata)
+ #       if "phishing" in str(file_path):
+ #           print(f"docs updated: {docs}")
     all_docs.extend(docs)
 
 print(f"\nLoaded {len(all_docs)} documents")
@@ -67,3 +109,4 @@ db = Chroma.from_documents(
 )
 
 print("\nVector DB ingestion complete.")
+print(f"\nchunk metadata:\n\n{chunks[0].metadata}\n\nchunk:\n\n{chunks[0]}")
