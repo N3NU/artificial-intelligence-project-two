@@ -31,7 +31,8 @@ db = Chroma(
 # -------------------------
 
 llm = ChatOllama(
-    model="llama3"
+    model="llama3",
+    temperature=0
 )
 
 # -------------------------
@@ -58,6 +59,24 @@ def is_malicious(text):
 # CHAT LOOP
 # -------------------------
 
+def detect_category(query):
+
+    query=query.lower()
+
+    if "ransomware" in query:
+        return "ransomware"
+
+    elif "phishing" in query:
+        return "phishing"
+
+    elif "password" in query:
+        return "identity"
+
+    elif "incident" in query:
+        return "incident_response"
+
+    return None
+
 while True:
 
     query = input("\nAsk a question (or 'exit'): ")
@@ -69,21 +88,39 @@ while True:
     # RETRIEVAL
     # -------------------------
 
-    results = db.similarity_search(
+    category=detect_category(query)
+
+    if category:
+        filters = {
+            "$and": [
+                {"trusted": True},
+                {"category": category}
+            ]
+        }
+    else:
+
+        filters = {
+            "trusted": True
+        }
+
+    print(f"\nRouting to category: {category}")
+
+    results = db.similarity_search_with_score(
         query,
         k=4,
-        filter={"trusted": True}
+        filter=filters
     )
 
     print("\n--- Retrieved Documents ---")
 
-    for r in results:
+    for r, score in results:
 
         print(
             f"""
     Source: {r.metadata.get('source')}
     Category: {r.metadata.get('category')}
     Trusted: {r.metadata.get('trusted')}
+    Score: {score}
     """
         )
 
@@ -93,20 +130,20 @@ while True:
 
     safe_results = []
 
-    for r in results:
+    for r, score in results:
 
         if is_malicious(r.page_content):
             print(f"\n[BLOCKED MALICIOUS CHUNK]: {r.metadata.get('source')}")
-#            print(f"[BLOCKED MALICIOUS CHUNK]: {r.page_content}")
+            print(f"[BLOCKED MALICIOUS CHUNK]: {r.page_content}")
             continue
 
-        safe_results.append(r)
+        safe_results.append((r, score))
 
     # -------------------------
     # BUILD CONTEXT
     # -------------------------
 
-    context = "-\n-\n".join([
+    context = "\n\n".join([
         f"""SOURCE: {r.metadata.get('source')}
 
 CATEGORY: {r.metadata.get('category')}
@@ -116,9 +153,9 @@ DEPARTMENT: {r.metadata.get('department')}
 CONTENT:
 {r.page_content}
 """
-        for r in safe_results
+        for r, score in safe_results
     ])
-#    print(f"context:\n\n{context}\n\n")
+    print(f"context:\n\n{context}\n\n")
     # -------------------------
     # PROMPT
     # -------------------------
