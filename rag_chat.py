@@ -97,7 +97,7 @@ while True:
 
         if is_malicious(r.page_content):
             print(f"\n[BLOCKED MALICIOUS CHUNK]: {r.metadata.get('source')}")
-            print(f"[BLOCKED MALICIOUS CHUNK]: {r.page_content}")
+#            print(f"[BLOCKED MALICIOUS CHUNK]: {r.page_content}")
             continue
 
         safe_results.append(r)
